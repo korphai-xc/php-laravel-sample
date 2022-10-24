@@ -1,0 +1,36 @@
+version: '3.9'
+services:
+  php-1:
+    build: ./php/.
+    image: php-laravel:7.4-fpm
+    working_dir: /var/www/
+    volumes:
+      - ./app/app1:/var/www/app1
+      - ./php/local.ini:/usr/local/etc/php/conf.d/local.ini
+    networks:
+      - app-network
+
+  php-2:
+    build: ./php/.
+    image: php-laravel:7.4-fpm
+    working_dir: /var/www/
+    volumes:
+      - ./app/app2:/var/www/app2
+      - ./php/local.ini:/usr/local/etc/php/conf.d/local.ini
+    networks:
+      - app-network
+
+  nginx:
+    image: nginx:1.22
+    volumes:
+      - ./app:/var/www/
+      - ./nginx-config:/etc/nginx/conf.d/
+    ports:
+      - 8001:80
+      - 8002:8081
+    networks:
+      - app-network
+
+networks:
+  app-network:
+    driver: bridge

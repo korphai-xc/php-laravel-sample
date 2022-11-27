@@ -3,12 +3,12 @@ services:
   php-1:
     build: ./php/.
     image: php-laravel:7.4-fpm
-    working_dir: /var/www/
+    working_dir: /var/www
     volumes:
       - ./app/app1:/var/www/app1
       - ./php/local.ini:/usr/local/etc/php/conf.d/local.ini
     networks:
-      - app-network
+      - db_external
 
   php-2:
     build: ./php/.
@@ -18,7 +18,7 @@ services:
       - ./app/app2:/var/www/app2
       - ./php/local.ini:/usr/local/etc/php/conf.d/local.ini
     networks:
-      - app-network
+      - db_external
 
   nginx:
     image: nginx:1.22
@@ -29,8 +29,11 @@ services:
       - 8001:80
       - 8002:8081
     networks:
-      - app-network
+      - db_external
 
 networks:
-  app-network:
-    driver: bridge
+    db_external:
+      name: database_external
+      external: true
+  # app-network:
+  #   driver: bridge
